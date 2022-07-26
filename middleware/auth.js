@@ -34,8 +34,10 @@ const auth = function (params) {
 
   // Express context and OpenID Issuer discovery.
   router.use(async (req, res, next) => {
-    req.oidc = new RequestContext(config, req, res, next);
-    res.oidc = new ResponseContext(config, req, res, next, transient);
+    const newAuthParams= {...config.authorizationParams,...req.query}
+    const newConfig = {...config,authorizationParams:newAuthParams}
+    req.oidc = new RequestContext(newConfig, req, res, next);
+    res.oidc = new ResponseContext(newConfig, req, res, next, transient);
     next();
   });
 
